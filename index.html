@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Metodos Numericos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- bootstrap -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+    <div id="app">
+        <v-app id="inspire" dark>
+            <v-navigation-drawer clipped fixed v-model="drawer" app>
+                <v-list dense>
+                    <v-list-tile @click="">
+                        <v-list-tile-action>
+                            <v-icon>dashboard</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Bisección</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile @click="">
+                        <v-list-tile-action>
+                            <v-icon>settings</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Settings</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </v-list>
+            </v-navigation-drawer>
+            <v-toolbar app fixed clipped-left>
+                <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+                <v-toolbar-title>Menu</v-toolbar-title>
+            </v-toolbar>
+            <v-content>
+                <v-layout row wrap>
+                    <v-flex xs12 sm6 md3 pl-3 pt-4>
+                        <v-text-field label="f(x) =" outline></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md3 pl-3 pt-4>
+                        <v-text-field label="Xi =" outline></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md3 pl-3 pt-4>
+                        <v-text-field label="Xf =" outline></v-text-field>
+                    </v-flex>
+                </v-layout>
+                <template>
+                    <v-data-table :headers="headers" :items="desserts" hide-actions class="elevation-1">
+                        <template slot="items" slot-scope="props">
+                            <td>{{ props.item.name }}</td>
+                            <td class="text-xs-right">{{ props.item.calories }}</td>
+                            <td class="text-xs-right">{{ props.item.fat }}</td>
+                            <td class="text-xs-right">{{ props.item.carbs }}</td>
+                            <td class="text-xs-right">{{ props.item.protein }}</td>
+                            <td class="text-xs-right">{{ props.item.iron }}</td>
+                        </template>
+                        <template slot="no-data">
+                            <v-alert :value="true" color="error" icon="warning">
+                                Verifique los datos de entrada!!
+                            </v-alert>
+                        </template>
+                    </v-data-table>
+                </template>
+            </v-content>
+            <v-footer app fixed>
+                <span>&copy; 2018 Bracamonte</span>
+            </v-footer>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: () => ({
+                drawer: true,
+                texto: 'Prueba',
+                headers: [{
+                        text: '#',
+                        align: 'center',
+                        sortable: false,
+                        value: 'name'
+                    },
+                    {
+                        text: 'Xi',
+                        value: 'Xi'
+                    },
+                    {
+                        text: 'f(Xi)',
+                        value: 'f(Xi)'
+                    },
+                    {
+                        text: 'Xf',
+                        value: 'Xf'
+                    },
+                    {
+                        text: 'Xr',
+                        value: 'Xr'
+                    },
+                    {
+                        text: 'f(Xr)',
+                        value: 'f(Xr)'
+                    },
+                    {
+                        text: 'f(Xi)*f(Xr)',
+                        value: 'f(Xi)*f(Xr)'
+                    },
+
+                    {
+                        text: 'Ea',
+                        value: 'Ea'
+                    }
+                ],
+                desserts: []
+
+
+            }),
+
+            props: {
+                source: String
+            }
+        })
+    </script>
+</body>
+
+</html>
