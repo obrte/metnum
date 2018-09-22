@@ -43,17 +43,33 @@
             </v-toolbar>
             <v-content>
                 <v-layout row wrap>
-                    <v-flex xs12 sm2 md2 pl-3 pt-4>
-                        <v-text-field label="f(x) =" outline v-model="funDeXs"></v-text-field>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                        <v-text-field label="f(x)=" outline v-model="funDeXs"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm2 md2 pl-3 pt-4>
-                        <v-text-field label="Xi =" outline v-model="Xi"></v-text-field>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                        <v-text-field label="Xi=" outline v-model="Xi"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm2 md2 pl-3 pt-4>
-                        <v-text-field label="Xf =" outline v-model="Xf"></v-text-field>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                        <v-text-field label="Xf=" outline v-model="Xf"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm1 md1 pt-2 pl-3>
-                        <v-btn fab dark large color="light-green" @click="resolver">
+                        <v-btn fab dark large color="light-green" @click="biseccion">
+                            <v-icon dark>subdirectory_arrow_left</v-icon>
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                        <v-text-field label="f'(x)=" outline v-model="deriF"></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                        <v-text-field label="Xn =" outline v-model="Xn"></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm1 md1 pt-2 pl-3>
+                        <v-btn fab dark large color="pink" @click="newton">
+                            <v-icon dark>subdirectory_arrow_left</v-icon>
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs12 sm1 md1 pt-2 pl-3>
+                        <v-btn fab dark large color="red" @click="limpiar">
                             <v-icon dark>subdirectory_arrow_left</v-icon>
                         </v-btn>
                     </v-flex>
@@ -94,9 +110,13 @@
             el: '#app',
             data: () => ({
                 drawer: false,
-                funDeXs: 'X^2-1',
+                funDeXs: '2x^3 + e^x + 4',
+                // funDeXs: '2X^-1 + 4',
                 Xi: '0',
-                Xf: '4',
+                Xf: '0',
+                deriF: '6x^2 + e^x',
+                Xn: 3,
+                eR: 80,
                 evaluacion: [],
                 headers: [{
                     text: '#',
@@ -144,8 +164,7 @@
             }),
             watch: {},
             methods: {
-                resolver() {
-
+                biseccion() {
                     var cont = 1
                     let a, b, m, fXi, fXf, fXm, FxifXm, eR, Xr
                     this.eR = 80
@@ -154,16 +173,16 @@
                     this.b = this.Xf
                     while (this.eR > 0.1) {
                         this.m = this.puntoMedio()
-                        this.fXi = this.evaluarXi()
-                        this.fXm = this.evaluarXm()
+                        this.fXi = this.evaluarFun(this.funDeXs, this.a)
+                        this.fXm = this.evaluarFun(this.funDeXs, this.b)
                         this.fXifXm = this.evaluarXiXn()
 
                         if (this.fXifXm > 0) {
                             this.Xr = 'a'
-                            this.eR = ((parseFloat(this.m) - parseFloat(this.a)) / parseFloat(this.m)) * 100
+                            this.eR = this.errAbsoluto(this.m, this.a)
                         } else {
                             this.Xr = 'b'
-                            this.eR = ((parseFloat(this.m) - parseFloat(this.b)) / parseFloat(this.m)) * 100
+                            this.eR = this.errAbsoluto(this.m, this.b)
                             this.eR = this.eR.toString().replace('-', '')
                         }
 
@@ -172,29 +191,61 @@
                             Xi: this.a,
                             Xf: this.b,
                             Xm: this.m,
-                            fXi: this.funDeXs.toLowerCase().replace('x', '(' + this.a + ')') + '= ' + this.fXi,
-                            fXm: this.funDeXs.toLowerCase().replace('x', '(' + this.m + ')') + '= ' + this.fXm,
+                            fXi: this.funDeXs.toLowerCase().split('x').join('(' + this.a + ')') + '= ' + this.fXi,
+                            fXm: this.funDeXs.toLowerCase().split('x').join('(' + this.m + ')') + '= ' + this.fXm,
                             fXifXm: '(' + this.fXi + ')*(' + this.fXm + ')= ' + this.fXifXm,
                             Er: this.eR + '%'
                         })
 
                         this.Xr == 'a' ? this.a = this.m : this.b = this.m
                         cont++
-
                     }
+                    // alert('El resultado fue: ' + this.m + '\ninteracciones: ' + cont)
+
                 },
                 puntoMedio() {
                     return (parseFloat(this.a) + parseFloat(this.b)) / 2
                 },
-                evaluarXi() {
-                    return math.eval(this.funDeXs.toLowerCase().replace('x', '(' + this.a + ')'))
-                },
-                evaluarXm() {
-                    return math.eval(this.funDeXs.toLowerCase().replace('x', '(' + this.b + ')'))
+                evaluarFun(funcion, valor) {
+                    return math.eval(funcion.toLowerCase().split('x').join('(' + valor + ')'))
                 },
                 evaluarXiXn() {
                     return math.eval(this.fXi * this.fXm)
+                },
+                errAbsoluto(xNew, xOld) {
+                    return math.abs(((parseFloat(xNew) - parseFloat(xOld)) / parseFloat(xNew))) * 100
+                },
+                newton() {
+
+                    this.eR = 100
+                    var cont = 0
+                    let ant = 0
+                    let nuevo = this.Xn
+                    let x, funX, deriX
+                    while (this.eR > 0.1) {
+                        x = nuevo
+                        this.funX = this.evaluarFun(this.funDeXs, x)
+                        this.deriX = this.evaluarFun(this.deriF, x)
+                        this.eR = this.errAbsoluto(nuevo, ant)
+
+                        this.evaluacion.push({
+                            numero: 'X' + cont,
+                            Xi: this.x,
+                            fXi: this.funDeXs.toLowerCase().split('x').join('(' + x + ')') + '= ' + this.funX,
+                            fXm: this.deriF.toLowerCase().split('x').join('(' + x + ')') + '= ' + this.deriX,
+                            Er: this.eR + '%'
+                        })
+
+                        ant = x
+                        nuevo = math.eval(x - (this.funX / this.deriX))
+
+                        cont++
+                    }
+                },
+                limpiar() {
+                    this.evaluacion = []
                 }
+
             },
 
             props: {
