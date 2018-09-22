@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- bootstrap -->
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
-    <link href="./css/vuetify.min.css" rel="stylesheet">
-    <script src="./js/jquery-1.11.3.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <!-- <script src="./js/jquery-1.11.3.js"></script> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 </head>
 
@@ -87,115 +87,113 @@
     </div>
 
     <script src="./js/math.js"></script>
-    <script src="./js/vue.js"></script>
-    <script src="./js/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
             data: () => ({
                 drawer: false,
-                funDeXs: '',
-                Xi: '',
-                Xf: '',
-                a: '',
-                b: '',
-                m: '',
-                // Xi: '',
-                // Xf: '',
-                // Xm: '',
-                // fXifXm: '',
+                funDeXs: 'X^2-1',
+                Xi: '0',
+                Xf: '4',
                 evaluacion: [],
                 headers: [{
-                        text: '#',
-                        align: 'left',
-                        sortable: false,
-                        value: 'name'
-                    },
-                    {
-                        text: 'Xi',
-                        sortable: false,
-                        value: 'Xi'
-                    },
-                    {
-                        text: 'Xf',
-                        sortable: false,
-                        value: 'Xf'
-                    },
-                    {
-                        text: 'Xm',
-                        sortable: false,
-                        value: 'Xm'
-                    },
-                    {
-                        text: 'f(Xi)',
-                        sortable: false,
-                        value: 'fXi'
-                    },
-                    {
-                        text: 'f(Xm)',
-                        sortable: false,
-                        value: 'fXm'
-                    },
-                    {
-                        text: 'f(Xi)*f(Xm)',
-                        sortable: false,
-                        value: 'fXifXm'
-                    },
-                    {
-                        text: 'Er',
-                        sortable: false,
-                        value: 'Er'
-                    }
+                    text: '#',
+                    align: 'left',
+                    sortable: false,
+                    value: 'name'
+                },
+                {
+                    text: 'Xi',
+                    sortable: false,
+                    value: 'Xi'
+                },
+                {
+                    text: 'Xf',
+                    sortable: false,
+                    value: 'Xf'
+                },
+                {
+                    text: 'Xm',
+                    sortable: false,
+                    value: 'Xm'
+                },
+                {
+                    text: 'f(Xi)',
+                    sortable: false,
+                    value: 'fXi'
+                },
+                {
+                    text: 'f(Xm)',
+                    sortable: false,
+                    value: 'fXm'
+                },
+                {
+                    text: 'f(Xi)*f(Xm)',
+                    sortable: false,
+                    value: 'fXifXm'
+                },
+                {
+                    text: 'Er',
+                    sortable: false,
+                    value: 'Er'
+                }
                 ],
-
 
             }),
             watch: {},
             methods: {
                 resolver() {
+
                     var cont = 1
-                    var eR = 100
+                    let a, b, m, fXi, fXf, fXm, FxifXm, eR, Xr
+                    this.eR = 80
+                    this.Xr = ''
                     this.a = this.Xi
                     this.b = this.Xf
-                    this.m = this.puntoMedio()
-                    // this.fXi = this.evaluarXi,
-                    // this.fXm = this.evaluarXm,
-                    // this.fXifXm = this.evaluarXiXn
+                    while (this.eR > 0.1) {
+                        this.m = this.puntoMedio()
+                        this.fXi = this.evaluarXi()
+                        this.fXm = this.evaluarXm()
+                        this.fXifXm = this.evaluarXiXn()
 
-                    this.evaluacion.push({
-                        numero: cont,
-                        Xi: this.a,
-                        Xf: this.b,
-                        Xm: this.m,
-                        fXi: this.evaluarXi(),
-                        fXm: this.evaluarXm(),
-                        fXifXm: this.evaluarXiXn()
+                        if (this.fXifXm > 0) {
+                            this.Xr = 'a'
+                            this.eR = ((parseFloat(this.m) - parseFloat(this.a)) / parseFloat(this.m)) * 100
+                        } else {
+                            this.Xr = 'b'
+                            this.eR = ((parseFloat(this.m) - parseFloat(this.b)) / parseFloat(this.m)) * 100
+                            this.eR = this.eR.toString().replace('-', '')
+                        }
 
-                    })
-                    // while (eR > 1) {
+                        this.evaluacion.push({
+                            numero: cont,
+                            Xi: this.a,
+                            Xf: this.b,
+                            Xm: this.m,
+                            fXi: this.funDeXs.toLowerCase().replace('x', '(' + this.a + ')') + '= ' + this.fXi,
+                            fXm: this.funDeXs.toLowerCase().replace('x', '(' + this.m + ')') + '= ' + this.fXm,
+                            fXifXm: '(' + this.fXi + ')*(' + this.fXm + ')= ' + this.fXifXm,
+                            Er: this.eR + '%'
+                        })
 
+                        this.Xr == 'a' ? this.a = this.m : this.b = this.m
+                        cont++
 
-                    // }
-
-
-                    // (xi, xf)
-                    // m = (xi, xf) / 2
-                    // Er = (|Xmn - Xmv|/Xmn) * 100
-
-
+                    }
                 },
                 puntoMedio() {
                     return (parseFloat(this.a) + parseFloat(this.b)) / 2
                 },
                 evaluarXi() {
-                    return math.eval(this.funDeXs.toLowerCase().replace('x', this.a))
+                    return math.eval(this.funDeXs.toLowerCase().replace('x', '(' + this.a + ')'))
                 },
                 evaluarXm() {
-                    return math.eval(this.funDeXs.toLowerCase().replace('x', this.b))
+                    return math.eval(this.funDeXs.toLowerCase().replace('x', '(' + this.b + ')'))
                 },
                 evaluarXiXn() {
-                    return (math.eval(this.funDeXs.toLowerCase().replace('x', this.a)) * math.eval(this.funDeXs
-                        .toLowerCase().replace('x', this.m)))
+                    return math.eval(this.fXi * this.fXm)
                 }
             },
 
