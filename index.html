@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- bootstrap -->
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <link href="./css/vuetify.min.css" rel="stylesheet">
+    <script src="./js/jquery-1.11.3.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
 </head>
 
 <body>
@@ -41,25 +43,33 @@
             </v-toolbar>
             <v-content>
                 <v-layout row wrap>
-                    <v-flex xs12 sm6 md3 pl-3 pt-4>
-                        <v-text-field label="f(x) =" outline></v-text-field>
+                    <v-flex xs12 sm2 md2 pl-3 pt-4>
+                        <v-text-field label="f(x) =" outline v-model="funDeXs"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6 md3 pl-3 pt-4>
-                        <v-text-field label="Xi =" outline></v-text-field>
+                    <v-flex xs12 sm2 md2 pl-3 pt-4>
+                        <v-text-field label="Xi =" outline v-model="Xi"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6 md3 pl-3 pt-4>
-                        <v-text-field label="Xf =" outline></v-text-field>
+                    <v-flex xs12 sm2 md2 pl-3 pt-4>
+                        <v-text-field label="Xf =" outline v-model="Xf"></v-text-field>
                     </v-flex>
+                    <v-flex xs12 sm1 md1 pt-2 pl-3>
+                        <v-btn fab dark large color="light-green" @click="resolver">
+                            <v-icon dark>subdirectory_arrow_left</v-icon>
+                        </v-btn>
+                    </v-flex>
+
                 </v-layout>
                 <template>
-                    <v-data-table :headers="headers" :items="desserts" hide-actions class="elevation-1">
+                    <v-data-table :headers="headers" :items="evaluacion" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
-                            <td>{{ props.item.name }}</td>
-                            <td class="text-xs-right">{{ props.item.calories }}</td>
-                            <td class="text-xs-right">{{ props.item.fat }}</td>
-                            <td class="text-xs-right">{{ props.item.carbs }}</td>
-                            <td class="text-xs-right">{{ props.item.protein }}</td>
-                            <td class="text-xs-right">{{ props.item.iron }}</td>
+                            <td>{{ props.item.numero }}</td>
+                            <td class="text-xs-left">{{ props.item.Xi }}</td>
+                            <td class="text-xs-left">{{ props.item.Xf }}</td>
+                            <td class="text-xs-left">{{ props.item.Xm }}</td>
+                            <td class="text-xs-left">{{ props.item.fXi }}</td>
+                            <td class="text-xs-left">{{ props.item.fXm }}</td>
+                            <td class="text-xs-left">{{ props.item.fXifXm }}</td>
+                            <td class="text-xs-left">{{ props.item.Er }}</td>
                         </template>
                         <template slot="no-data">
                             <v-alert :value="true" color="error" icon="warning">
@@ -68,6 +78,7 @@
                         </template>
                     </v-data-table>
                 </template>
+
             </v-content>
             <v-footer app fixed>
                 <span>&copy; 2018 Bracamonte</span>
@@ -75,54 +86,118 @@
         </v-app>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script src="./js/math.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/vuetify.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
             data: () => ({
-                drawer: true,
-                texto: 'Prueba',
+                drawer: false,
+                funDeXs: '',
+                Xi: '',
+                Xf: '',
+                a: '',
+                b: '',
+                m: '',
+                // Xi: '',
+                // Xf: '',
+                // Xm: '',
+                // fXifXm: '',
+                evaluacion: [],
                 headers: [{
                         text: '#',
-                        align: 'center',
+                        align: 'left',
                         sortable: false,
                         value: 'name'
                     },
                     {
                         text: 'Xi',
+                        sortable: false,
                         value: 'Xi'
                     },
                     {
-                        text: 'f(Xi)',
-                        value: 'f(Xi)'
-                    },
-                    {
                         text: 'Xf',
+                        sortable: false,
                         value: 'Xf'
                     },
                     {
-                        text: 'Xr',
-                        value: 'Xr'
+                        text: 'Xm',
+                        sortable: false,
+                        value: 'Xm'
                     },
                     {
-                        text: 'f(Xr)',
-                        value: 'f(Xr)'
+                        text: 'f(Xi)',
+                        sortable: false,
+                        value: 'fXi'
                     },
                     {
-                        text: 'f(Xi)*f(Xr)',
-                        value: 'f(Xi)*f(Xr)'
+                        text: 'f(Xm)',
+                        sortable: false,
+                        value: 'fXm'
                     },
-
                     {
-                        text: 'Ea',
-                        value: 'Ea'
+                        text: 'f(Xi)*f(Xm)',
+                        sortable: false,
+                        value: 'fXifXm'
+                    },
+                    {
+                        text: 'Er',
+                        sortable: false,
+                        value: 'Er'
                     }
                 ],
-                desserts: []
 
 
             }),
+            watch: {},
+            methods: {
+                resolver() {
+                    var cont = 1
+                    var eR = 100
+                    this.a = this.Xi
+                    this.b = this.Xf
+                    this.m = this.puntoMedio()
+                    // this.fXi = this.evaluarXi,
+                    // this.fXm = this.evaluarXm,
+                    // this.fXifXm = this.evaluarXiXn
+
+                    this.evaluacion.push({
+                        numero: cont,
+                        Xi: this.a,
+                        Xf: this.b,
+                        Xm: this.m,
+                        fXi: this.evaluarXi(),
+                        fXm: this.evaluarXm(),
+                        fXifXm: this.evaluarXiXn()
+
+                    })
+                    // while (eR > 1) {
+
+
+                    // }
+
+
+                    // (xi, xf)
+                    // m = (xi, xf) / 2
+                    // Er = (|Xmn - Xmv|/Xmn) * 100
+
+
+                },
+                puntoMedio() {
+                    return (parseFloat(this.a) + parseFloat(this.b)) / 2
+                },
+                evaluarXi() {
+                    return math.eval(this.funDeXs.toLowerCase().replace('x', this.a))
+                },
+                evaluarXm() {
+                    return math.eval(this.funDeXs.toLowerCase().replace('x', this.b))
+                },
+                evaluarXiXn() {
+                    return (math.eval(this.funDeXs.toLowerCase().replace('x', this.a)) * math.eval(this.funDeXs
+                        .toLowerCase().replace('x', this.m)))
+                }
+            },
 
             props: {
                 source: String
