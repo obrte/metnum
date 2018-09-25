@@ -19,20 +19,36 @@
         <v-app id="inspire" dark>
             <v-navigation-drawer clipped fixed v-model="drawer" app>
                 <v-list dense>
-                    <v-list-tile @click="">
+                    <v-list-tile @click="menu = 'biseccion'">
                         <v-list-tile-action>
-                            <v-icon>dashboard</v-icon>
+                            <v-icon large color="deep-orange" v-if="menu == 'biseccion'">forward</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
                             <v-list-tile-title>Bisección</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
-                    <v-list-tile @click="">
+                    <v-list-tile @click="menu = 'newton'">
                         <v-list-tile-action>
-                            <v-icon>settings</v-icon>
+                            <v-icon large color="deep-orange" v-if="menu == 'newton'">forward</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>Settings</v-list-tile-title>
+                            <v-list-tile-title>Newton</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile @click="menu = 'secante'">
+                        <v-list-tile-action>
+                            <v-icon large color="deep-orange" v-if="menu == 'secante'">forward</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Secante</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile @click="menu = 'otro'">
+                        <v-list-tile-action>
+                            <v-icon large color="deep-orange" v-if="menu == 'otro'">forward</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Otro</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
@@ -40,43 +56,50 @@
             <v-toolbar app fixed clipped-left>
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
                 <v-toolbar-title>Menu</v-toolbar-title>
+                <v-divider class="mx-3 pr-5" inset vertical></v-divider>
+                <v-flex xs6 sm2 md2 pl-5 ml-5>
+                    <v-toolbar-title>Metodos Númericos</v-toolbar-title>
+                </v-flex>
+                <v-toolbar-title v-text="metodo"></v-toolbar-title>
+                </v-flex>
+
             </v-toolbar>
             <v-content>
                 <v-layout row wrap>
-                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                    <v-flex xs12 sm2 md2 pl-3 pt-4 v-if="menu != ''">
                         <v-text-field label="f(x)=" outline v-model="funDeXs"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'biseccion'">
                         <v-text-field label="Xi=" outline v-model="Xi"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'biseccion'">
                         <v-text-field label="Xf=" outline v-model="Xf"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm1 md1 pt-2 pl-3>
+                    <v-flex xs12 sm2 md2 pt-2 pl-3 v-if="menu == 'biseccion'">
                         <v-btn fab dark large color="light-green" @click="biseccion">
                             <v-icon dark>subdirectory_arrow_left</v-icon>
                         </v-btn>
                     </v-flex>
-                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                    <v-flex xs12 sm2 md2 pl-3 pt-4 v-if="menu == 'newton'">
                         <v-text-field label="f'(x)=" outline v-model="deriF"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm1 md1 pl-3 pt-4>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'newton'">
                         <v-text-field label="Xn =" outline v-model="Xn"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm1 md1 pt-2 pl-3>
-                        <v-btn fab dark large color="pink" @click="newton">
+                    <v-flex xs12 sm1 md1 pt-2 pl-3 v-if="menu == 'newton'">
+                        <v-btn fab dark large color="light-green" @click="newton">
                             <v-icon dark>subdirectory_arrow_left</v-icon>
                         </v-btn>
                     </v-flex>
-                    <v-flex xs12 sm1 md1 pt-2 pl-3>
+                    <v-flex xs12 sm1 md1 pt-2 pl-3 v-if="menu != ''">
                         <v-btn fab dark large color="red" @click="limpiar">
-                            <v-icon dark>subdirectory_arrow_left</v-icon>
+                            <v-icon dark>delete_forever</v-icon>
                         </v-btn>
                     </v-flex>
 
                 </v-layout>
-                <template>
-                    <v-data-table :headers="headers" :items="evaluacion" hide-actions class="elevation-1">
+                <template v-if="menu == 'biseccion'">
+                    <v-data-table :headers="headersBise" :items="evaluacion" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
                             <td>{{ props.item.numero }}</td>
                             <td class="text-xs-left">{{ props.item.Xi }}</td>
@@ -85,11 +108,33 @@
                             <td class="text-xs-left">{{ props.item.fXi }}</td>
                             <td class="text-xs-left">{{ props.item.fXm }}</td>
                             <td class="text-xs-left">{{ props.item.fXifXm }}</td>
-                            <td class="text-xs-left">{{ props.item.Er }}</td>
+                            <td class="text-xs-left">{{ props.item.Ea }}</td>
                         </template>
                         <template slot="no-data">
-                            <v-alert :value="true" color="error" icon="warning">
-                                Verifique los datos de entrada!!
+                            <v-alert :value="true" :color="Colorerror" icon="warning">
+                                Verifique los datos de entrada y presione
+                                <v-btn color="light-green" fab small dark>
+                                    <v-icon>subdirectory_arrow_left</v-icon>
+                                </v-btn>
+                            </v-alert>
+                        </template>
+                    </v-data-table>
+                </template>
+                <template v-if="menu == 'newton'">
+                    <v-data-table :headers="headersNewton" :items="evaluacion" hide-actions class="elevation-1">
+                        <template slot="items" slot-scope="props">
+                            <td>{{ props.item.numero }}</td>
+                            <td class="text-xs-left">{{ props.item.X }}</td>
+                            <td class="text-xs-left">{{ props.item.fX }}</td>
+                            <td class="text-xs-left">{{ props.item.fderiX }}</td>
+                            <td class="text-xs-left">{{ props.item.Ea }}</td>
+                        </template>
+                        <template slot="no-data">
+                            <v-alert :value="true" :color="Colorerror" icon="warning">
+                                Verifique los datos de entrada y presione
+                                <v-btn color="light-green" fab small dark>
+                                    <v-icon>subdirectory_arrow_left</v-icon>
+                                </v-btn>
                             </v-alert>
                         </template>
                     </v-data-table>
@@ -109,62 +154,112 @@
         var app = new Vue({
             el: '#app',
             data: () => ({
-                drawer: false,
-                funDeXs: '2x^3 + e^x + 4',
-                // funDeXs: '2X^-1 + 4',
-                Xi: '0',
-                Xf: '0',
-                deriF: '6x^2 + e^x',
-                Xn: 3,
-                eR: 80,
+                drawer: true,
+                Colorerror: 'info',
+                metodo: '',
+                funDeXs: '',
+                menu: '',
+                Xi: '',
+                Xf: '',
+                deriF: '',
+                Xn: '',
+                eR: '',
                 evaluacion: [],
-                headers: [{
-                    text: '#',
-                    align: 'left',
-                    sortable: false,
-                    value: 'name'
-                },
-                {
-                    text: 'Xi',
-                    sortable: false,
-                    value: 'Xi'
-                },
-                {
-                    text: 'Xf',
-                    sortable: false,
-                    value: 'Xf'
-                },
-                {
-                    text: 'Xm',
-                    sortable: false,
-                    value: 'Xm'
-                },
-                {
-                    text: 'f(Xi)',
-                    sortable: false,
-                    value: 'fXi'
-                },
-                {
-                    text: 'f(Xm)',
-                    sortable: false,
-                    value: 'fXm'
-                },
-                {
-                    text: 'f(Xi)*f(Xm)',
-                    sortable: false,
-                    value: 'fXifXm'
-                },
-                {
-                    text: 'Er',
-                    sortable: false,
-                    value: 'Er'
-                }
+                headersBise: [{
+                        text: '#',
+                        align: 'left',
+                        sortable: false,
+                        value: 'name'
+                    },
+                    {
+                        text: 'Xi',
+                        sortable: false,
+                        value: 'Xi'
+                    },
+                    {
+                        text: 'Xf',
+                        sortable: false,
+                        value: 'Xf'
+                    },
+                    {
+                        text: 'Xm',
+                        sortable: false,
+                        value: 'Xm'
+                    },
+                    {
+                        text: 'f(Xi)',
+                        sortable: false,
+                        value: 'fXi'
+                    },
+                    {
+                        text: 'f(Xm)',
+                        sortable: false,
+                        value: 'fXm'
+                    },
+                    {
+                        text: 'f(Xi)*f(Xm)',
+                        sortable: false,
+                        value: 'fXifXm'
+                    },
+                    {
+                        text: 'Ea',
+                        sortable: false,
+                        value: 'Ea'
+                    }
+                ],
+                headersNewton: [{
+                        text: '#',
+                        align: 'left',
+                        sortable: false,
+                        value: 'name'
+                    },
+                    {
+                        text: 'X',
+                        sortable: false,
+                        value: 'X'
+                    },
+                    {
+                        text: 'f(X)',
+                        sortable: false,
+                        value: 'fX'
+                    },
+                    {
+                        text: 'f´(X)',
+                        sortable: false,
+                        value: 'fderiX'
+                    },
+                    {
+                        text: 'Ea',
+                        sortable: false,
+                        value: 'Ea'
+                    }
                 ],
 
             }),
-            watch: {},
+            watch: {
+                menu: function () {
+                    this.limpiar()
+                    switch (this.menu) {
+                        case 'biseccion':
+                            this.metodo = 'Bisección'
+                            this.funDeXs = 'e^-x - x'
+                            this.Xi = '0'
+                            this.Xf = '1'
+                            break
+                        case 'newton':
+                            this.metodo = 'Newton'
+                            this.funDeXs = '2x^3 + e^x + 4'
+                            this.deriF = '6x^2 + e^x'
+                            this.Xn = '3'
+                            break
+                        default:
+                            break;
+                    }
+                }
+            },
             methods: {
                 biseccion() {
+                    this.evaluacion = []
                     var cont = 1
                     let a, b, m, fXi, fXf, fXm, FxifXm, eR, Xr
                     this.eR = 80
@@ -176,6 +271,12 @@
                         this.fXi = this.evaluarFun(this.funDeXs, this.a)
                         this.fXm = this.evaluarFun(this.funDeXs, this.b)
                         this.fXifXm = this.evaluarXiXn()
+
+                        if (this.fXifXm.toString() == 'NaN') {
+                            this.evaluacion = []
+                            this.Colorerror = 'error'
+                            return
+                        }
 
                         if (this.fXifXm > 0) {
                             this.Xr = 'a'
@@ -191,10 +292,12 @@
                             Xi: this.a,
                             Xf: this.b,
                             Xm: this.m,
-                            fXi: this.funDeXs.toLowerCase().split('x').join('(' + this.a + ')') + '= ' + this.fXi,
-                            fXm: this.funDeXs.toLowerCase().split('x').join('(' + this.m + ')') + '= ' + this.fXm,
+                            fXi: this.funDeXs.toLowerCase().split('x').join('(' + this.a + ')') + '= ' +
+                                this.fXi,
+                            fXm: this.funDeXs.toLowerCase().split('x').join('(' + this.m + ')') + '= ' +
+                                this.fXm,
                             fXifXm: '(' + this.fXi + ')*(' + this.fXm + ')= ' + this.fXifXm,
-                            Er: this.eR + '%'
+                            Ea: this.eR + '%'
                         })
 
                         this.Xr == 'a' ? this.a = this.m : this.b = this.m
@@ -202,38 +305,37 @@
                     }
                     // alert('El resultado fue: ' + this.m + '\ninteracciones: ' + cont)
 
-                },
-                puntoMedio() {
-                    return (parseFloat(this.a) + parseFloat(this.b)) / 2
-                },
-                evaluarFun(funcion, valor) {
-                    return math.eval(funcion.toLowerCase().split('x').join('(' + valor + ')'))
-                },
-                evaluarXiXn() {
-                    return math.eval(this.fXi * this.fXm)
-                },
-                errAbsoluto(xNew, xOld) {
-                    return math.abs(((parseFloat(xNew) - parseFloat(xOld)) / parseFloat(xNew))) * 100
+
                 },
                 newton() {
-
+                    this.evaluacion = []
                     this.eR = 100
                     var cont = 0
                     let ant = 0
                     let nuevo = this.Xn
-                    let x, funX, deriX
+                    let x, funX, deriX, verificar
                     while (this.eR > 0.1) {
                         x = nuevo
                         this.funX = this.evaluarFun(this.funDeXs, x)
                         this.deriX = this.evaluarFun(this.deriF, x)
                         this.eR = this.errAbsoluto(nuevo, ant)
 
+                        verificar = this.funX * this.deriX * x
+                        if (verificar.toString() == 'NaN') {
+                            this.evaluacion = []
+                            this.Colorerror = 'error'
+                            return
+                        }
+
+
                         this.evaluacion.push({
                             numero: 'X' + cont,
-                            Xi: this.x,
-                            fXi: this.funDeXs.toLowerCase().split('x').join('(' + x + ')') + '= ' + this.funX,
-                            fXm: this.deriF.toLowerCase().split('x').join('(' + x + ')') + '= ' + this.deriX,
-                            Er: this.eR + '%'
+                            X: x,
+                            fX: this.funDeXs.toLowerCase().split('x').join('(' + x + ')') + '= ' +
+                                this.funX,
+                            fderiX: this.deriF.toLowerCase().split('x').join('(' + x + ')') + '= ' +
+                                this.deriX,
+                            Ea: this.eR + '%'
                         })
 
                         ant = x
@@ -242,12 +344,52 @@
                         cont++
                     }
                 },
+                puntoMedio() {
+                    try {
+                        return (parseFloat(this.a) + parseFloat(this.b)) / 2
+                    } catch {
+                        this.evaluacion = []
+                        this.Colorerror = 'error'
+                    }
+
+                },
+                evaluarFun(funcion, valor) {
+                    try {
+                        return math.eval(funcion.toLowerCase().split('x').join('(' + valor + ')'))
+                    } catch {
+                        this.evaluacion = []
+                        this.Colorerror = 'error'
+                    }
+                },
+                evaluarXiXn() {
+                    try {
+                        return math.eval(this.fXi * this.fXm)
+                    } catch {
+                        this.evaluacion = []
+                        this.Colorerror = 'error'
+                    }
+                },
+                errAbsoluto(xNew, xOld) {
+                    try {
+                        return math.abs(((parseFloat(xNew) - parseFloat(xOld)) / parseFloat(xNew))) * 100
+                    } catch {
+                        this.evaluacion = []
+                        this.Colorerror = 'error'
+                    }
+                },
+
                 limpiar() {
                     this.evaluacion = []
+                    this.funDeXs = ''
+                    this.Xi = ''
+                    this.Xf = ''
+                    this.deriF = ''
+                    this.Xn = ''
+                    this.eR = 100
+                    this.Colorerror = 'info'
                 }
 
             },
-
             props: {
                 source: String
             }
