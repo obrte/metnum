@@ -43,12 +43,12 @@
                             <v-list-tile-title>Secante</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
-                    <v-list-tile @click="menu = 'otro'">
+                    <v-list-tile @click="menu = 'cambio'">
                         <v-list-tile-action>
-                            <v-icon large color="deep-orange" v-if="menu == 'otro'">forward</v-icon>
+                            <v-icon large color="deep-orange" v-if="menu == 'cambio'">forward</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>Otro</v-list-tile-title>
+                            <v-list-tile-title>Cambio de variable</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
@@ -66,9 +66,11 @@
             </v-toolbar>
             <v-content>
                 <v-layout row wrap>
+                    <!-- Funcion -->
                     <v-flex xs12 sm2 md2 pl-3 pt-4 v-if="menu != ''">
                         <v-text-field label="f(x)=" outline v-model="funDeXs"></v-text-field>
                     </v-flex>
+                    <!-- Biseccion -->
                     <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'biseccion'">
                         <v-text-field label="Xi=" outline v-model="Xi"></v-text-field>
                     </v-flex>
@@ -80,6 +82,7 @@
                             <v-icon dark>subdirectory_arrow_left</v-icon>
                         </v-btn>
                     </v-flex>
+                    <!-- Newton -->
                     <v-flex xs12 sm2 md2 pl-3 pt-4 v-if="menu == 'newton'">
                         <v-text-field label="f'(x)=" outline v-model="deriF"></v-text-field>
                     </v-flex>
@@ -91,6 +94,19 @@
                             <v-icon dark>subdirectory_arrow_left</v-icon>
                         </v-btn>
                     </v-flex>
+                    <!-- Secante -->
+                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'secante'">
+                        <v-text-field label="X0=" outline v-model="Xi"></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'secante'">
+                        <v-text-field label="X1=" outline v-model="Xf"></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm2 md2 pt-2 pl-3 v-if="menu == 'secante'">
+                        <v-btn fab dark large color="light-green" @click="secante">
+                            <v-icon dark>subdirectory_arrow_left</v-icon>
+                        </v-btn>
+                    </v-flex>
+                    <!-- Limpiar -->
                     <v-flex xs12 sm1 md1 pt-2 pl-3 v-if="menu != ''">
                         <v-btn fab dark large color="red" @click="limpiar">
                             <v-icon dark>delete_forever</v-icon>
@@ -98,6 +114,7 @@
                     </v-flex>
 
                 </v-layout>
+                <!-- Tabla Biseccion -->
                 <template v-if="menu == 'biseccion'">
                     <v-data-table :headers="headersBise" :items="evaluacion" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
@@ -120,6 +137,7 @@
                         </template>
                     </v-data-table>
                 </template>
+                <!-- Tabla Newton -->
                 <template v-if="menu == 'newton'">
                     <v-data-table :headers="headersNewton" :items="evaluacion" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
@@ -127,6 +145,28 @@
                             <td class="text-xs-left">{{ props.item.X }}</td>
                             <td class="text-xs-left">{{ props.item.fX }}</td>
                             <td class="text-xs-left">{{ props.item.fderiX }}</td>
+                            <td class="text-xs-left">{{ props.item.Ea }}</td>
+                        </template>
+                        <template slot="no-data">
+                            <v-alert :value="true" :color="Colorerror" icon="warning">
+                                Verifique los datos de entrada y presione
+                                <v-btn color="light-green" fab small dark>
+                                    <v-icon>subdirectory_arrow_left</v-icon>
+                                </v-btn>
+                            </v-alert>
+                        </template>
+                    </v-data-table>
+                </template>
+                <!-- Tabla Secante -->
+                <template v-if="menu == 'secante'">
+                    <v-data-table :headers="headersSecante" :items="evaluacion" hide-actions class="elevation-1">
+                        <template slot="items" slot-scope="props">
+                            <td>{{ props.item.numero }}</td>
+                            <td class="text-xs-left">{{ props.item.Xa }}</td>
+                            <td class="text-xs-left">{{ props.item.Xb }}</td>
+                            <td class="text-xs-left">{{ props.item.fXa }}</td>
+                            <td class="text-xs-left">{{ props.item.fXb }}</td>
+                            <td class="text-xs-left">{{ props.item.Xc }}</td>
                             <td class="text-xs-left">{{ props.item.Ea }}</td>
                         </template>
                         <template slot="no-data">
@@ -169,7 +209,7 @@
                         text: '#',
                         align: 'left',
                         sortable: false,
-                        value: 'name'
+                        value: 'numero'
                     },
                     {
                         text: 'Xi',
@@ -211,7 +251,7 @@
                         text: '#',
                         align: 'left',
                         sortable: false,
-                        value: 'name'
+                        value: 'numero'
                     },
                     {
                         text: 'X',
@@ -227,6 +267,43 @@
                         text: 'f´(X)',
                         sortable: false,
                         value: 'fderiX'
+                    },
+                    {
+                        text: 'Ea',
+                        sortable: false,
+                        value: 'Ea'
+                    }
+                ],
+                headersSecante: [{
+                        text: '#',
+                        align: 'left',
+                        sortable: false,
+                        value: 'numero'
+                    },
+                    {
+                        text: 'Xn-1',
+                        sortable: false,
+                        value: 'Xa'
+                    },
+                    {
+                        text: 'Xn',
+                        sortable: false,
+                        value: 'Xb'
+                    },
+                    {
+                        text: 'f(Xn-1)',
+                        sortable: false,
+                        value: 'fXa'
+                    },
+                    {
+                        text: 'f(Xn)',
+                        sortable: false,
+                        value: 'fXb'
+                    },
+                    {
+                        text: 'Xn+1',
+                        sortable: false,
+                        value: 'Xc'
                     },
                     {
                         text: 'Ea',
@@ -252,6 +329,12 @@
                             this.deriF = '6x^2 + e^x'
                             this.Xn = '3'
                             break
+                        case 'secante':
+                            this.metodo = 'Secante'
+                            this.funDeXs = 'e^-x - x'
+                            this.Xi = '0'
+                            this.Xf = '1'
+                            break
                         default:
                             break;
                     }
@@ -266,7 +349,7 @@
                     this.Xr = ''
                     this.a = this.Xi
                     this.b = this.Xf
-                    while (this.eR > 0.1) {
+                    while (this.eR > 0.01) {
                         this.m = this.puntoMedio()
                         this.fXi = this.evaluarFun(this.funDeXs, this.a)
                         this.fXm = this.evaluarFun(this.funDeXs, this.b)
@@ -314,7 +397,7 @@
                     let ant = 0
                     let nuevo = this.Xn
                     let x, funX, deriX, verificar
-                    while (this.eR > 0.1) {
+                    while (this.eR > 0.01) {
                         x = nuevo
                         this.funX = this.evaluarFun(this.funDeXs, x)
                         this.deriX = this.evaluarFun(this.deriF, x)
@@ -340,6 +423,50 @@
 
                         ant = x
                         nuevo = math.eval(x - (this.funX / this.deriX))
+
+                        cont++
+                    }
+                },
+                secante() {
+                    this.evaluacion = []
+                    this.eR = 100
+                    var cont = 0
+                    let ant = this.Xi
+                    let X = this.Xf
+                    let nuevo, funX, funAnt, funXc, srtXc, verificar
+                    funXc = 'X1 - F(X1)*((X1 - X0)/(F(X1) - F(X0)))'
+                    while (this.eR > 0.01) {
+                        funX = this.evaluarFun(this.funDeXs, X)
+                        funAnt = this.evaluarFun(this.funDeXs, ant)
+                        srtXc = funXc
+                            .split('F(X1)').join('(' + funX + ')')
+                            .split('F(X0)').join('(' + funAnt + ')')
+                            .split('X1').join('(' + X + ')')
+                            .split('X0').join('(' + ant + ')')
+                        nuevo = math.eval(srtXc)
+
+                        this.eR = this.errAbsoluto(nuevo, X)
+                        verificar = funX * funAnt * X * nuevo * ant
+                        if (verificar.toString() == 'NaN') {
+                            this.evaluacion = []
+                            this.Colorerror = 'error'
+                            return
+                        }
+
+                        this.evaluacion.push({
+                            numero: 'X' + cont,
+                            Xa: ant,
+                            Xb: X,
+                            fXa: this.funDeXs.toLowerCase().split('x').join('(' + ant + ')') + '= ' +
+                                funAnt,
+                            fXb: this.funDeXs.toLowerCase().split('x').join('(' + X + ')') + '= ' +
+                                funX,
+                            Xc: srtXc + '= ' + nuevo,
+                            Ea: this.eR + '%'
+                        })
+
+                        ant = X
+                        X = nuevo
 
                         cont++
                     }
