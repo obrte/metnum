@@ -482,6 +482,7 @@
                     this.Colorerror = 'info'
                 },
                 restaurar() {
+                    this.limpiar()
                     switch (this.menu) {
                         case 'biseccion':
                             this.metodo = 'Bisección'
