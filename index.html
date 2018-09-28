@@ -52,7 +52,13 @@
                             <v-list-tile-title>Cambio de variable</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
+                    <v-flex pt-5 pl-5 ml-5>
+                        <v-btn fab dark large color="grey" @click="drawer = false">
+                            <v-icon dark>keyboard_arrow_left</v-icon>
+                        </v-btn>
+                    </v-flex>
                 </v-list>
+
             </v-navigation-drawer>
             <v-toolbar app fixed clipped-left>
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
