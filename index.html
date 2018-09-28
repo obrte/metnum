@@ -74,19 +74,19 @@
                 <v-layout row wrap>
 
                     <!-- Funcion -->
-                    <v-flex xs11 sm3 md2 pl-3 pt-4 v-if="menu != ''">
+                    <v-flex xs11 sm3 md2 pl-2 pt-4 v-if="menu != ''">
                         <v-text-field label="f(x)=" outline v-model="funDeXs"></v-text-field>
                     </v-flex>
 
                     <!-- Biseccion -->
                     <template v-if="menu == 'biseccion'">
-                        <v-flex xs3 sm2 md1 pl-3 pt-4>
+                        <v-flex xs3 sm2 md1 pl-2 pt-4>
                             <v-text-field label="Xi=" outline v-model="Xi" type="number"></v-text-field>
                         </v-flex>
-                        <v-flex xs3 sm2 md1 pl-3 pt-4>
+                        <v-flex xs3 sm2 md1 pl-2 pt-4>
                             <v-text-field label="Xf=" outline v-model="Xf" type="number"></v-text-field>
                         </v-flex>
-                        <v-flex xs3 sm2 md1 pt-2 pl-3>
+                        <v-flex xs3 sm2 md1 pt-2 pl-2>
                             <v-btn fab dark large color="light-green" @click="biseccion">
                                 <v-icon dark>subdirectory_arrow_left</v-icon>
                             </v-btn>
@@ -101,7 +101,7 @@
                         <v-flex xs3 sm2 md1 pl-3 pt-4>
                             <v-text-field label="Xn =" outline v-model="Xn" type="number"></v-text-field>
                         </v-flex>
-                        <v-flex xs3 sm2 md1 pt-2 pl-3>
+                        <v-flex xs3 sm2 md1 pt-2 pl-2>
                             <v-btn fab dark large color="light-green" @click="newton">
                                 <v-icon dark>subdirectory_arrow_left</v-icon>
                             </v-btn>
@@ -116,7 +116,7 @@
                         <v-flex xs3 sm2 md1 pl-3 pt-4>
                             <v-text-field label="X1=" outline v-model="Xf" type="number"></v-text-field>
                         </v-flex>
-                        <v-flex xs3 sm2 md1 pt-2 pl-3>
+                        <v-flex xs3 sm2 md1 pt-2 pl-2>
                             <v-btn fab dark large color="light-green" @click="secante">
                                 <v-icon dark>subdirectory_arrow_left</v-icon>
                             </v-btn>
@@ -131,7 +131,7 @@
                         <v-flex xs3 sm2 md1 pl-3 pt-4>
                             <v-text-field label="X1=" outline v-model="Xf" type="number"></v-text-field>
                         </v-flex>
-                        <v-flex xs3 sm2 md1 pt-2 pl-3>
+                        <v-flex xs3 sm2 md1 pt-2 pl-2>
                             <v-btn fab dark large color="light-green" @click="cambioV">
                                 <v-icon dark>subdirectory_arrow_left</v-icon>
                             </v-btn>
@@ -140,7 +140,7 @@
 
                     <!-- Limpiar -->
                     <template v-if="menu != ''">
-                        <v-flex xs3 sm2 md1 pt-2 pl-3>
+                        <v-flex xs3 sm2 md1 pt-2 pl-1>
                             <v-btn fab dark large color="red" @click="limpiar">
                                 <v-icon dark>delete_forever</v-icon>
                             </v-btn>
@@ -151,13 +151,13 @@
                     <!-- Valores Grafica -->
                     <template v-if="menu != ''">
                         <div class="title pt-3 pl-2">Graficar:</div>
-                        <v-flex xs3 sm2 md1 pl-3 pt-4>
+                        <v-flex xs3 sm2 md1 pl-2 pt-4>
                             <v-text-field label="X1=" outline v-model="valoresGrafica.i" type="number"></v-text-field>
                         </v-flex>
-                        <v-flex xs3 sm2 md1 pl-3 pt-4>
+                        <v-flex xs3 sm2 md1 pl-2 pt-4>
                             <v-text-field label="X2=" outline v-model="valoresGrafica.f" type="number"></v-text-field>
                         </v-flex>
-                        <v-flex xs3 sm3 md1 pt-2 pl-3>
+                        <v-flex xs3 sm3 md1 pt-2 pl-1>
                             <v-btn fab dark large color="teal" @click="dialog = !dialog">
                                 <v-icon dark>show_chart</v-icon>
                             </v-btn>
