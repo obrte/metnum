@@ -2,7 +2,7 @@
             el: '#app',
             data: () => ({
                 dialog: false,
-                drawer: true,
+                drawer: false,
                 snackbar: false,
                 timeout: 5000,
                 windowSize: {
@@ -464,7 +464,9 @@
                 onResize() {
                     this.windowSize = {
                         x: 0.8 * window.innerWidth,
-                        y: 0.8 * window.innerHeight
+                        y: 0.8 * window.innerHeight,
+                        w: window.innerWidth,
+                        h: window.innerHeight
                     }
                     this.grafica()
                 },
