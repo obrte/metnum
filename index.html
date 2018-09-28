@@ -63,62 +63,108 @@
                 </v-flex>
                 <v-toolbar-title v-text="metodo"></v-toolbar-title>
                 </v-flex>
+                <v-spacer></v-spacer>
+                <span>Restaurar</span>
+                <v-btn icon color="pink darken-4" @click="restaurar">
+                    <v-icon>refresh</v-icon>
+                </v-btn>
 
             </v-toolbar>
             <v-content>
                 <v-layout row wrap>
+
                     <!-- Funcion -->
                     <v-flex xs12 sm2 md2 pl-3 pt-4 v-if="menu != ''">
                         <v-text-field label="f(x)=" outline v-model="funDeXs"></v-text-field>
                     </v-flex>
+
                     <!-- Biseccion -->
-                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'biseccion'">
-                        <v-text-field label="Xi=" outline v-model="Xi" type="numeber"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'biseccion'">
-                        <v-text-field label="Xf=" outline v-model="Xf" type="numeber"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm1 md1 pt-2 pl-3 v-if="menu == 'biseccion'">
-                        <v-btn fab dark large color="light-green" @click="biseccion">
-                            <v-icon dark>subdirectory_arrow_left</v-icon>
-                        </v-btn>
-                    </v-flex>
+                    <template v-if="menu == 'biseccion'">
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="Xi=" outline v-model="Xi" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="Xf=" outline v-model="Xf" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pt-2 pl-3>
+                            <v-btn fab dark large color="light-green" @click="biseccion">
+                                <v-icon dark>subdirectory_arrow_left</v-icon>
+                            </v-btn>
+                        </v-flex>
+                    </template>
+
                     <!-- Newton -->
-                    <v-flex xs12 sm2 md2 pl-3 pt-4 v-if="menu == 'newton'">
-                        <v-text-field label="f'(x)=" outline v-model="deriF"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'newton'">
-                        <v-text-field label="Xn =" outline v-model="Xn" type="numeber"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm1 md1 pt-2 pl-3 v-if="menu == 'newton'">
-                        <v-btn fab dark large color="light-green" @click="newton">
-                            <v-icon dark>subdirectory_arrow_left</v-icon>
-                        </v-btn>
-                    </v-flex>
+                    <template v-if="menu == 'newton'">
+                        <v-flex xs12 sm2 md2 pl-3 pt-4>
+                            <v-text-field label="f'(x)=" outline v-model="deriF"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="Xn =" outline v-model="Xn" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pt-2 pl-3>
+                            <v-btn fab dark large color="light-green" @click="newton">
+                                <v-icon dark>subdirectory_arrow_left</v-icon>
+                            </v-btn>
+                        </v-flex>
+                    </template>
+
                     <!-- Secante -->
-                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'secante'">
-                        <v-text-field label="X0=" outline v-model="Xi" type="numeber"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm1 md1 pl-3 pt-4 v-if="menu == 'secante'">
-                        <v-text-field label="X1=" outline v-model="Xf" type="numeber"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm1 md1 pt-2 pl-3 v-if="menu == 'secante'">
-                        <v-btn fab dark large color="light-green" @click="secante">
-                            <v-icon dark>subdirectory_arrow_left</v-icon>
-                        </v-btn>
-                    </v-flex>
+                    <template v-if="menu == 'secante'">
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="X0=" outline v-model="Xi" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="X1=" outline v-model="Xf" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pt-2 pl-3>
+                            <v-btn fab dark large color="light-green" @click="secante">
+                                <v-icon dark>subdirectory_arrow_left</v-icon>
+                            </v-btn>
+                        </v-flex>
+                    </template>
+
+                    <!-- Cambio -->
+                    <template v-if="menu == 'cambio'">
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="X0=" outline v-model="Xi" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="X1=" outline v-model="Xf" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pt-2 pl-3>
+                            <v-btn fab dark large color="light-green" @click="cambioV">
+                                <v-icon dark>subdirectory_arrow_left</v-icon>
+                            </v-btn>
+                        </v-flex>
+                    </template>
+
                     <!-- Limpiar -->
-                    <v-flex xs12 sm1 md1 pt-2 pl-3 v-if="menu != ''">
-                        <v-btn fab dark large color="red" @click="limpiar">
-                            <v-icon dark>delete_forever</v-icon>
-                        </v-btn>
-                    </v-flex>
-                    <v-flex xs12 sm1 md1 pt-2 pl-3 v-if="menu != ''">
-                        <v-btn fab dark large color="teal" @click="dialog = !dialog">
-                            <v-icon dark>show_chart</v-icon>
-                        </v-btn>
-                    </v-flex>
+                    <template v-if="menu != ''">
+                        <v-flex xs12 sm1 md1 pt-2 pl-3>
+                            <v-btn fab dark large color="red" @click="limpiar">
+                                <v-icon dark>delete_forever</v-icon>
+                            </v-btn>
+                        </v-flex>
+                    </template>
+
+                    <v-divider class="mx-3 pr-5" inset vertical></v-divider>
+                    <!-- Valores Grafica -->
+                    <template v-if="menu != ''">
+                        <div class="title pt-3">Graficar:</div>
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="X1=" outline v-model="valoresGrafica.i" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pl-3 pt-4>
+                            <v-text-field label="X2=" outline v-model="valoresGrafica.f" type="number"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm1 md1 pt-2 pl-3>
+                            <v-btn fab dark large color="teal" @click="dialog = !dialog">
+                                <v-icon dark>show_chart</v-icon>
+                            </v-btn>
+                        </v-flex>
+                    </template>
                 </v-layout>
+
                 <!-- Plot Grafica -->
                 <v-dialog v-model="dialog" v-resize="onResize" :width="this.windowSize.x + 30">
                     <v-card>
@@ -129,11 +175,6 @@
                         </v-card-text>
                     </v-card>
                 </v-dialog>
-
-
-
-
-
 
                 <!-- Tabla Biseccion -->
                 <template v-if="menu == 'biseccion'">
@@ -146,7 +187,7 @@
                             <td class="text-xs-left">{{ props.item.fXi }}</td>
                             <td class="text-xs-left">{{ props.item.fXm }}</td>
                             <td class="text-xs-left">{{ props.item.fXifXm }}</td>
-                            <td class="text-xs-left">{{ props.item.Ea }}</td>
+                            <td class="text-xs-left">{{ props.item.Er }}</td>
                         </template>
                         <template slot="no-data">
                             <v-alert :value="true" :color="Colorerror" icon="warning">
@@ -158,6 +199,7 @@
                         </template>
                     </v-data-table>
                 </template>
+
                 <!-- Tabla Newton -->
                 <template v-if="menu == 'newton'">
                     <v-data-table :headers="headersNewton" :items="evaluacion" hide-actions class="elevation-1">
@@ -166,7 +208,8 @@
                             <td class="text-xs-left">{{ props.item.X }}</td>
                             <td class="text-xs-left">{{ props.item.fX }}</td>
                             <td class="text-xs-left">{{ props.item.fderiX }}</td>
-                            <td class="text-xs-left">{{ props.item.Ea }}</td>
+                            <td class="text-xs-left">{{ props.item.Xc }}</td>
+                            <td class="text-xs-left">{{ props.item.Er }}</td>
                         </template>
                         <template slot="no-data">
                             <v-alert :value="true" :color="Colorerror" icon="warning">
@@ -178,6 +221,7 @@
                         </template>
                     </v-data-table>
                 </template>
+
                 <!-- Tabla Secante -->
                 <template v-if="menu == 'secante'">
                     <v-data-table :headers="headersSecante" :items="evaluacion" hide-actions class="elevation-1">
@@ -188,7 +232,31 @@
                             <td class="text-xs-left">{{ props.item.fXa }}</td>
                             <td class="text-xs-left">{{ props.item.fXb }}</td>
                             <td class="text-xs-left">{{ props.item.Xc }}</td>
-                            <td class="text-xs-left">{{ props.item.Ea }}</td>
+                            <td class="text-xs-left">{{ props.item.Er }}</td>
+                        </template>
+                        <template slot="no-data">
+                            <v-alert :value="true" :color="Colorerror" icon="warning">
+                                Verifique los datos de entrada y presione
+                                <v-btn color="light-green" fab small dark>
+                                    <v-icon>subdirectory_arrow_left</v-icon>
+                                </v-btn>
+                            </v-alert>
+                        </template>
+                    </v-data-table>
+                </template>
+
+                <!-- Tabla Cambio -->
+                <template v-if="menu == 'cambio'">
+                    <v-data-table :headers="headersCambio" :items="evaluacion" hide-actions class="elevation-1">
+                        <template slot="items" slot-scope="props">
+                            <td>{{ props.item.numero }}</td>
+                            <td class="text-xs-left">{{ props.item.Xa }}</td>
+                            <td class="text-xs-left">{{ props.item.Xb }}</td>
+                            <td class="text-xs-left">{{ props.item.fXa }}</td>
+                            <td class="text-xs-left">{{ props.item.fXb }}</td>
+                            <td class="text-xs-left">{{ props.item.Xc }}</td>
+                            <td class="text-xs-left">{{ props.item.fXc }}</td>
+                            <td class="text-xs-left">{{ props.item.Er }}</td>
                         </template>
                         <template slot="no-data">
                             <v-alert :value="true" :color="Colorerror" icon="warning">
@@ -202,6 +270,13 @@
                 </template>
 
             </v-content>
+            <v-snackbar v-model="snackbar" color="red darken-4" :timeout="timeout" right top multi-line>
+                Verifica los datos a graficar
+                <v-btn icon dark @click="snackbar = false">
+
+                    <v-icon>clear</v-icon>
+                </v-btn>
+            </v-snackbar>
             <v-footer app fixed>
                 <span>&copy; 2018 Bracamonte</span>
             </v-footer>
